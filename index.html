@@ -1,0 +1,102 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Untitled Page</title>
+<meta name="generator" content="WYSIWYG Web Builder 14 - http://www.wysiwygwebbuilder.com">
+<link href="Untitled1.css" rel="stylesheet">
+<link href="index.css" rel="stylesheet">
+</head>
+<body>
+<div id="wb_Checkbox1" style="position:absolute;left:481px;top:393px;width:38px;height:31px;z-index:0;">
+<input type="checkbox" id="Checkbox1" name="Checkbox1" value="on" style="position:absolute;left:0;top:0;" onclick ="textControl()"><label for="Checkbox1"></label></div>
+
+<form name="sms" method="get" action="add.php" enctype="multipart/form-data" id="Form1" target="_blank">
+<input type="submit" id="Button1" value="Сохранить" style="position:absolute;left:194px;top:386px;width:171px;height:38px;z-index:1;">
+<textarea name="text" id="TextArea1" style="position:absolute;left:194px;top:164px;width:315px;height:176px;z-index:2;" rows="10" cols="50" spellcheck="false" onkeyup ="textControl()"></textarea>
+<input type="hidden" name="total_sms" value="0">
+</form>
+
+<div id="wb_Text1" style="position:absolute;left:194px;top:441px;width:128px;height:16px;z-index:3;">
+<span style="color:#000000;font-family:Arial;font-size:13px;">символов введено</span><span style="color:#FF0000;font-family:Arial;font-size:13px;"> </span></div>
+<div id="wb_Text2" style="position:absolute;left:194px;top:472px;width:128px;height:16px;z-index:4;">
+<span style="color:#000000;font-family:Arial;font-size:13px;">sms необходимо </span></div>
+
+<div id="wb_Text3" name="wb_Text3" style="position:absolute;left:322px;top:441px;width:43px;height:16px;z-index:6;">
+<span style="color:#000000;font-family:Arial;font-size:13px;">0</span></div>
+<div id="wb_Text4" name="wb_Text4" style="position:absolute;left:322px;top:472px;width:43px;height:16px;z-index:7;">
+<span style="color:#000000;font-family:Arial;font-size:13px;">0</span></div>
+<div id="wb_Text5" style="position:absolute;left:436px;top:441px;width:128px;height:16px;z-index:8;">
+<span style="color:#000000;font-family:Arial;font-size:13px;">транслитерировать</span></div>
+
+</body>
+<script>
+    function textControl() {
+        var element = document.getElementsByName("text")[0];
+        var text = element.value;
+
+
+        var element2 = document.getElementsByName("Checkbox1")[0];
+        var Checkbox1 = false;
+        Checkbox1 = element2.checked;
+
+        if(Checkbox1 === true){
+            element.value = cyrill_to_latin(text);
+            length_sms = calculate_total_sms(text, 160, 153);
+            display_total_sms(length_sms);
+        }
+        else {
+            element.value = latin_to_cyrill(text);
+            length_sms = calculate_total_sms(text, 70, 67);
+            display_total_sms(length_sms);
+        }
+
+        display_total_simbols(text);
+    }
+
+    var arrru = new Array ('Я','я','Ю','ю','Ч','ч','Ш','ш','Щ','щ','Ж','ж','А','а','Б','б','В','в','Г','г','Д','д','Е','е','Ё','ё','З','з','И','и','Й','й','К','к','Л','л','М','м','Н','н','О','о','П','п','Р','р','С','с','Т','т','У','у','Ф','ф','Х','х','Ц', 'ц','Ы','ы','Ь','ь','Ъ','ъ','Э','э');
+    var arren = new Array ('Ya','ya','U','u','Ch','ch','Sh','sh','Sch','sch','Zh','zh','A','a','B','b','V','v','G','g','D','d','E','e','Yo','yo','Z','z','I','i','Y','y','K','k','L','l','M','m','N','n', 'O','o','P','p','R','r','S','s','T','t','U','u','F','f','H','h','Ts','ts','I','i','`','`','\'','\'','E','e');
+    function cyrill_to_latin(text){
+        for(var i=0; i<arrru.length; i++){
+            var reg = new RegExp(arrru[i], "g");
+            text = text.replace(reg, arren[i]);
+        }
+        return text;
+    }
+
+    function latin_to_cyrill(text){
+        for(var i=0; i<arren.length; i++){
+            var reg = new RegExp(arren[i], "g");
+            text = text.replace(reg, arrru[i]);
+        }
+        return text;
+    }
+
+    function display_total_sms(length_sms){
+        var element = document.getElementsByName("wb_Text4")[0];
+        element.textContent = length_sms;
+        set_total_sms(length_sms);
+    }
+
+    function set_total_sms(length_sms) {
+        var total_sms_element = document.getElementsByName("total_sms")[0];
+        total_sms_element.value = length_sms;
+    }
+
+    function display_total_simbols(input_text){
+        var element = document.getElementsByName("wb_Text3")[0];
+        element.textContent = input_text.length;
+    }
+
+    function calculate_total_sms(text, length_single_sms, length_many_sms){
+        length_sms = text.length;
+        if(length_sms <= length_single_sms){
+            return 1;
+        }
+        else {
+            return Math.ceil(length_sms/length_many_sms);
+        }
+    }
+
+</script>
+</html>
